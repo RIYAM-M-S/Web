@@ -47,9 +47,7 @@ $result = mysqli_query($connection, $query);
                     <ul>
                         <li>
                         
-                            <a href="learnerProfile.php">
-                              <img src="user.png" alt="User" class="round-image">
-                            </a>
+                        <a href="learnerProfile.php"> Profile  </a>
                         </li>
                         <li><a href="Homepage.php">Sign out</a></li>
                     </ul>

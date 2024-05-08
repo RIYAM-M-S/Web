@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signout"])) {
         <header>
             <div class="container">
                 <div class="logo">
-                    <a href="LearnerHP.html">
+                    <a href="LearnerHP.php">
                         <img src="logo.png" alt="Logo">
                     </a>
                 </div>
@@ -119,13 +119,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signout"])) {
                             
                             
                         </li>
-                        <li>
-                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" onsubmit="return confirm('Are you sure you want to sign out?');">
-                            <input type="hidden" name="signout" value="true">
-                            <input type="hidden" name="learnerID" value="<?php echo $_SESSION["userID"]; ?>">
-                            <input type="submit" class="signout" value="Sign out">
-                        </form>
-                        </li>
+                      
+                        <li><a href="SignOut.php">Sign out</a></li>
+                     
                     </ul>
                 </div>
             </div>

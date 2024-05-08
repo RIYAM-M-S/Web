@@ -16,6 +16,18 @@ if (!isset($_SESSION['email'])) {
     header("Location: login.php");
     exit();
 }
+// Sign out logic
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signout"])) {
+    // Unset all session variables
+    $_SESSION = array();
+
+    // Destroy the session
+    session_destroy();
+
+    // Redirect to homepage after sign out
+    header("Location: Homepage.php");
+    exit;
+}
 
 $email = $_SESSION['email'];
 
@@ -90,15 +102,15 @@ if (!empty($email)) {
             <div class="links">
                 <ul>
                     <li>
-                        <a href="NativeProfilePage.html">
-                            <?php 
-                            if (!empty($partner_photo)) {
-                                echo "<img src='images/" . htmlspecialchars($partner_photo) . "' alt='User' class='round-image'>";
-                            }
-                            ?>
+                    <a href="NativeProfilePage.php"> Profile</a>
                         </a>
                     </li>
-                    <li><a href="LinguMates/LinguMates/signOut.php">Sign out</a></li>
+                    <li>
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" onsubmit="return confirm('Are you sure you want to sign out?');">
+                            <input type="hidden" name="signout" value="true">
+                            <a href="#" class="signout" onclick="this.closest('form').submit();">Sign out</a>
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -116,7 +128,19 @@ if (!empty($email)) {
         </div>
         <h1 class="hero-title"><?php echo htmlspecialchars($partner_name); ?></h1>
         <p class="hero-description"><?php echo htmlspecialchars($bio); ?></p>
-        <h4 class="hero-description">Proficiency Level in English: Advanced</h4>
+        <!-- <h4 class="hero-description">Proficiency Level in English: Advanced</h4> -->
+        <?php
+            $query = "SELECT lp.partnerID, pl.language, pl.proficiency
+            FROM languagepartners lp
+            JOIN partner_languages pl ON lp.partnerID = pl.partnerID
+            WHERE lp.partnerID = $partnerID";
+            
+            $result = mysqli_query($conn, $query);
+            while($arr = mysqli_fetch_assoc($result)){
+                echo "<h4 class='hero-description'>Proficiency Level in".$arr['language'].": ".$arr['language']."</h4>";
+            }
+
+        ?>
         <h4 class="hero-description">Rating:</h4>
         
         <?php
@@ -154,7 +178,7 @@ if (!empty($email)) {
                    
                     $sql = "SELECT r.learnerID, r.rating, r.review, l.firstName, l.lastName
                             FROM reviews_ratings r
-                            JOIN learners l ON r.learnerID = l.learnerID";
+                            JOIN learners l ON r.learnerID = l.learnerID WHERE partnerID = $partnerID ";
                     $result = mysqli_query($conn, $sql);
 
                     

@@ -69,7 +69,7 @@ if (!empty($email)) {
     <header>
         <div class="container">
             <div class="logo">
-                <a href="NS_homepage.html">
+                <a href="NS_homepage.php">
                     <img src="logo.png" alt="Logo">
                 </a>
             </div>
@@ -79,7 +79,7 @@ if (!empty($email)) {
                     <li>
                         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" onsubmit="return confirm('Are you sure you want to sign out?');">
                             <input type="hidden" name="signout" value="true">
-                            <input type="submit" class="signout" value="Sign out">
+                            <a href="#" class="signout" onclick="this.closest('form').submit();">Sign out</a>
                         </form>
                     </li>
                 </ul>
@@ -89,14 +89,14 @@ if (!empty($email)) {
     </header>
 
     <header class="hero-section">
-        <a href="NativeProfilePage.html">
+        <a href="NativeProfilePage.php">
         <img src="images/<?php echo $photo; ?>" alt="User" class="round-image">
           </a>
           <h2 class="hero-title"><?php echo $firstName . ' ' . $lastName; ?></h2>
       <h1 class="hero-title">Welcome Back to Your Language Tutoring Dashboard!</h1>
       <p class="hero-description">Ready to take your language tutoring journey to the next level? Check out your language learning request now to start your journey!</p>
       <button class="hero-btn">
-          <a href="NS_request.html">View Requests</a>
+          <a href="NS_request.php">View Requests</a>
       </button>
   </header>
   <div class="time-load-section">
@@ -129,7 +129,7 @@ if (!empty($email)) {
                     Check out your upcoming language learning sessions!
                 </p>
                 <button class="hero-btn">
-                  <a href="CurrentSessionsPage.html">View</a>
+                  <a href="Sessions.php">View</a>
                 </button>
             </div>
             <div class="card">
@@ -186,7 +186,7 @@ if (!empty($email)) {
 
   // Redirect to Partner Page
   function redirectToPartnerPage() {
-    window.location.href = "viewPartner.html";
+    window.location.href = "viewPartner.php";
   }
 
   // Back to Top Button

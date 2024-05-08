@@ -13,7 +13,7 @@ if ($mysqli->connect_error) {
 }
 
 $sql_partners = "SELECT languagepartners.*,
-                AVG(RatePartners.rating) AS avg_rating,
+                AVG(rating) AS avg_rating,
                 GROUP_CONCAT(partner_languages.language SEPARATOR ', ') AS languages
                 FROM languagepartners
                 LEFT JOIN RatePartners ON languagepartners.partnerID = RatePartners.partnerID
@@ -63,9 +63,7 @@ if ($result_partners->num_rows > 0) {
             <div class="links">
                 <ul>
                     <li>
-                        <a href="learnerProfile.php">
-                        <?php echo '<img src="' . $partner['profile_pic'] . '" alt="User" class="round-image">'; ?>
-                        </a>
+                    <a href="learnerProfile.php"> Profile  </a>
                     </li>
                     <li><a href="Homepage.php">Sign out</a></li>
                 </ul>
@@ -90,13 +88,12 @@ if ($result_partners->num_rows > 0) {
                 echo '<img src="images/' . $partner['photo'] . '" alt="User" style="width: 90px; height: 90px; position: relative; border-radius: 90px; border-color: rgb(60, 59, 59);">';
                 echo '<h2 class="h2">' . $name . '</h2>';
                 echo '<p class="p">Target language: ' . $targetLanguage . '</p>';
-                echo '<p class="p">Average Rating: ' . number_format($avgRating, 1) . ' / 5</p>'; // Display average rating
+                echo '<p class="p">Average Rating: ' . number_format($avgRating, 1) . ' / 5</p>';
                 echo '<p class="p">Price per Hour: $' . $pricePerHour . '</p>';
                 echo '</div>';
 
                 echo '<a class="button" href="mailto:' . $partnerEmail . '">Contact</a>';
                 echo '<a class="button" href="Request.php">Make a Request</a>';
-                echo '<a class="button" href="edit_request.php">Edit Request</a>';
                 echo '</div>';
             } endforeach;
           } else {

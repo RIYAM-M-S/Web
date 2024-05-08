@@ -222,21 +222,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     
 <div class="big-wrapper light">
-    <header>
-        <div class="container">
-            <div class="logo">
-                <a href="NS_homepage.php">
-                    <img src="logo.png" alt="Logo">
-                </a>
+<header>
+            <div class="container">
+                <div class="logo">
+                    <a href="NS_homepage.php">
+                        <img src="logo.png" alt="Logo">
+                    </a>
+                </div>
+                <div class="links">
+                    <ul>
+                        <li>
+                        <a href="NativeProfilePage.php"> Profile</a>
+                        </li>
+                        <li>
+                                <a href="Homepage.php"> Sign out</a>
+                            
+                        </li>
+                    </ul>
+                </div>
             </div>
-          
-            <div class="links">
-                <ul>
-                    <li><a href="Homepage.php">Sign out</a></li>
-                </ul>
-            </div>
-        </div>
-    </header>
+        </header>
   
     <div id="profile-container">
            <div id="user-image">

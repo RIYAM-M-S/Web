@@ -12,31 +12,78 @@ if ($mysqli->connect_error) {
     die("Connection error: " . $mysqli->connect_errno);
 }
 
-$sql_sessions = "SELECT s.*, l.firstName AS learnerFirstName, l.lastName AS learnerLastName 
-                FROM sessions s
-                JOIN learners l ON s.learnerID = l.learnerID
-                WHERE s.learnerID = ? AND s.status = 'scheduled'";
-$stmt = $mysqli->prepare($sql_sessions);
-$stmt->bind_param("i", $_SESSION['learnerID']);
-$stmt->execute();
-$result = $stmt->get_result();
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
 
-$sessions = [];
+    $photo = '';
 
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $session = [];
-        $session['language'] = $row['language'];
-        $session['learnerName'] = $row['learnerFirstName'] . ' ' . $row['learnerLastName'];
-        $session['proficiency'] = $row['proficiency'];
-        $session['scheduledTime'] = $row['scheduledTime'];
-        $session['duration'] = $row['duration'];
-        $session['payment'] = $row['payment'];
-
-        $sessions[] = $session;
+    if (!empty($email)) {
+        $query = "SELECT photo FROM languagepartners WHERE email = ?";
+        $stmt = $mysqli->prepare($query);
+        if ($stmt) {
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result && $result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $photo = $row['photo'];
+            }
+            $stmt->close();
+        }
     }
 }
-$stmt->close();
+
+$query = "SELECT partnerID FROM languagepartners WHERE email=?";
+$stmt = $mysqli->prepare($query);
+if ($stmt) {
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        $partnerID = $row['partnerID'];
+
+        $currentDateTime = date("Y-m-d H:i:s");
+
+        $querySessions = "SELECT s.*, r.language, r.proficiencyLevel, l.firstName, l.lastName 
+                  FROM sessions s 
+                  JOIN requests r ON s.sessionID = r.sessionID 
+                  JOIN learners l ON s.learnerID = l.learnerID 
+                  WHERE s.partnerID = ? 
+                  AND r.status = 'accepted' 
+                  AND CONCAT(r.preferredSchedule, ' ', r.time) < ?";
+
+                          
+        $stmtSessions = $mysqli->prepare($querySessions);
+        if ($stmtSessions) {
+            $stmtSessions->bind_param("is", $partnerID, $currentDateTime);
+            $stmtSessions->execute();
+            $resultSessions = $stmtSessions->get_result();
+
+            $sessions = [];
+
+            if ($resultSessions->num_rows > 0) {
+              while ($rowSession = $resultSessions->fetch_assoc()) {
+                $session = [];
+                $session['language'] = $rowSession['language'];
+                $session['learnerName'] = $rowSession['firstName'] . ' ' . $rowSession['lastName'];
+                $session['proficiency'] = $rowSession['proficiencyLevel'];
+                $session['scheduledTime'] = $rowSession['scheduledTime'];
+                $session['duration'] = $rowSession['duration'];
+            
+                $sessions[] = $session;
+            }
+            
+            } else {
+                echo "<h2>You don't have any current sessions</h2>";
+            }
+        }
+    }
+    $stmt->close();
+} else {
+    echo "<h2>Session ID not set</h2>";
+}
+
 $mysqli->close();
 ?>
 
@@ -76,10 +123,7 @@ $mysqli->close();
                         <div class="links">
                             <ul>
                                 <li>
-                                
-                                    <a href="learnerProfile.php">
-                                    <img src="images/user.png" alt="User" class="round-image">
-                                    </a>
+                                <a href="learnerProfile.php"> Profile  </a>
                                 </li>
                                 <li><a href="Homepage.php">Sign out</a></li>
                             </ul>
@@ -113,13 +157,7 @@ $mysqli->close();
                             <td><?php echo $session['proficiency']; ?></td>
                             <td><?php echo $session['scheduledTime']; ?></td>
                             <td><?php echo $session['duration']; ?> min</td>
-                            <td>
-                                <?php if ($session['payment'] == 'paid') : ?>
-                                    <a href="StartingLivePage.php" id="save-btn">Go to Session</a>
-                                <?php else : ?>
-                                    Waiting for Payment
-                                <?php endif; ?>
-                            </td>
+                            <td><?php echo '<a href="StartingLivePage.html" id="save-btn">Go to Session</a>'; ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>

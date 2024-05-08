@@ -100,9 +100,11 @@ $mysqli->close();
                 <div class="links">
                     <ul>
                         <li>
-                            <form method="POST">
-                                <button type="submit" name="signout">Sign out</button>
-                            </form>
+                        <a href="NativeProfilePage.php"> Profile</a>
+                        </li>
+                        <li>
+                                <a href="Homepage.php"> Sign out</a>
+                            
                         </li>
                     </ul>
                 </div>

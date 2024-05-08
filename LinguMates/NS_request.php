@@ -58,19 +58,19 @@ if (!empty($email)) {
       <title>Requests</title>
       <link rel="stylesheet" href="NS_request.css">
       <?php
-        $conect = mysqli_connect(DBHOST, DBUSER, DBPWD, DBNAME);
+      $conect = mysqli_connect(DBHOST, DBUSER, DBPWD, DBNAME);
 
-        if (!$conect) {
-            die("Connection failed: " . mysqli_connect_error());
-        }
-        if (isset($_GET["new_status"])) {
-          $requestID = $_GET["request_id"];
-          $changedStatus = $_GET["new_status"];
-      
-          $query = "UPDATE requests SET status = '$changedStatus' WHERE requestID = $requestID;";
-          mysqli_query($conect, $query);
-        }
-      
+      if (!$conect) {
+          die("Connection failed: " . mysqli_connect_error());
+      }
+      if (isset($_GET["new_status"])) {
+        $requestID = $_GET["request_id"];
+        $changedStatus = $_GET["new_status"];
+    
+        $query = "UPDATE requests SET status = '$changedStatus' WHERE requestID = $requestID;";
+        mysqli_query($conect, $query);
+      }
+    
       ?>
       <script>
       function changeStatus(event) {
@@ -166,13 +166,7 @@ if (!empty($email)) {
             <div class="links">
               <ul>
                 <li>
-                  <a href="NativeProfilePage.html">
-                    <?php 
-                    if (!empty($partner_photo)) {
-                        echo "<img src='images/" . htmlspecialchars($partner_photo) . "' alt='User' class='round-image'>";
-                    }
-                    ?>
-                  </a>
+                  <a href="NativeProfilePage.php"> Profile</a>
                 </li>
                 <li><a href="LinguMates/LinguMates/signOut.php">Sign out</a></li>
               </ul>

@@ -22,7 +22,7 @@ session_start();
             <div class="links">
                 <ul>
                     <li>
-                        <a href="NativeProfilePage.php">
+                        <a href="NativeProfilePage.php"> Profile</a>
                             <?php 
                             $host = "localhost";
                             $dbname = "lingumatesdb";
@@ -36,26 +36,8 @@ session_start();
                             if (isset($_SESSION['email'])) {
                                 $email = $_SESSION['email'];
 
-                                $photo = '';
-
-                                if (!empty($email)) {
-                                    $query = "SELECT photo FROM languagepartners WHERE email = ?";
-                                    $stmt = $mysqli->prepare($query);
-                                    if ($stmt) {
-                                        $stmt->bind_param("s", $email);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                                        if ($result && $result->num_rows > 0) {
-                                            $row = $result->fetch_assoc();
-                                            $photo = $row['photo'];
-                                        }
-                                        $stmt->close();
-                                    }
-                                }
                             }
                             ?>
-                            <img src="images/<?php echo htmlspecialchars($photo); ?>" alt="User" class="round-image">
-                        </a>
                     </li>
                     <li><a href="SignOut.php">Sign out</a></li>
                 </ul>
