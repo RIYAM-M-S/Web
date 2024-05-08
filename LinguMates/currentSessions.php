@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signout"])) {
         <header>
             <div class="container">
                 <div class="logo">
-                    <a href="LearnerHP.php">
+                    <a href="LearnerHP.html">
                         <img src="logo.png" alt="Logo">
                     </a>
                 </div>
@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signout"])) {
                 <div class="links">
                     <ul>
                         <li>
-                            <a href="learnerProfile.php">
+                            <a href="learnerProfile.html">
                                 <?php 
                                 if (isset($_SESSION['email'])) {
                                     $email = $_SESSION['email'];
@@ -198,7 +198,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signout"])) {
                                 } else {
                                     echo "<td><a href='payment' id='save-btn'>pay</a></td>";
                                 }
-                                echo "<td><a href='StartingLivePage.php' id='save-btn'>Go to Session</a></td>";
+                                echo "<td><a href='StartingLivePage.html' id='save-btn'>Go to Session</a></td>";
                                 echo "</tr>";
                             }
                         ?>
