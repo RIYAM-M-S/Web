@@ -24,7 +24,7 @@ $partner_name = '';
 $partner_description = '';
 $partner_proficiency = '';
 if (!empty($email)) {
-    $query = "SELECT photo, firstName, lastName, bio FROM languagepartners WHERE email = ?";
+    $query = "SELECT photo, firstName, lastName, bio, partnerID FROM languagepartners WHERE email = ?";
     $stmt_partner = mysqli_prepare($conn, $query);
     if ($stmt_partner) {
         mysqli_stmt_bind_param($stmt_partner, "s", $email);
@@ -35,7 +35,8 @@ if (!empty($email)) {
             $partner_photo = $row_partner['photo'];
             $partner_name = $row_partner['firstName'] . ' ' . $row_partner['lastName'];
             $partner_description = $row_partner['bio'];
-            $bio = $partner_description; // Assigning the bio to $bio variable
+            $partnerID = $row_partner['partnerID'];
+            $bio = $partner_description; 
         }
         
         mysqli_stmt_close($stmt_partner);
@@ -59,15 +60,15 @@ if (!empty($email)) {
         .round-image {
             width: 60px;
             height: 60px;
-            border-radius: 50%; /* This will make the image round */
-            border: 2px solid #333; /* This will create a dark outline */
+            border-radius: 50%; 
+            border: 2px solid #333; 
             
         }
         .round-image2 {
             width: 150px;
             height: 150px;
-            border-radius: 50%; /* This will make the image round */
-            border: 2px solid #333; /* This will create a dark outline */
+            border-radius: 50%; 
+            border: 2px solid #333; 
             
         }
         h2 {
@@ -81,7 +82,7 @@ if (!empty($email)) {
     <header>
         <div class="container">
             <div class="logo">
-                <a href="NS_homepage.html">
+                <a href="NS_homepage.php">
                     <img src="logo.png" alt="Logo">
                 </a>
             </div>
@@ -97,7 +98,7 @@ if (!empty($email)) {
                             ?>
                         </a>
                     </li>
-                    <li><a href="Homepage.html">Sign out</a></li>
+                    <li><a href="LinguMates/LinguMates/signOut.php">Sign out</a></li>
                 </ul>
             </div>
         </div>
@@ -119,22 +120,22 @@ if (!empty($email)) {
         <h4 class="hero-description">Rating:</h4>
         
         <?php
-            // Fetch average rating for the partner
+            
             $sql = "SELECT AVG(rating) AS avg_rating FROM reviews_ratings  WHERE partnerID = ?";
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "i", $_SESSION["partnerID"]); // Assuming partnerID is set somewhere
+            mysqli_stmt_bind_param($stmt, "i", $partnerID); 
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
             $row = mysqli_fetch_assoc($result);
             $roundedRating = floor($row['avg_rating']);
 
-            // Display stars based on the rounded rating
+            
             for ($i = 1; $i <= 5; $i++) {
                 if ($i <= $roundedRating) {
-                    echo '<i class="fa-solid fa-star" style="color: #FFD43B;"></i>'; // Filled star
+                    echo '<i class="fa-solid fa-star" style="color: #FFD43B;"></i>'; 
 
                 } else {
-                    echo '<i class="fa-regular fa-star" style="color: #FFD43B;"></i>'; // Empty star
+                    echo '<i class="fa-regular fa-star" style="color: #FFD43B;"></i>';
                 }
             }
 
@@ -144,19 +145,19 @@ if (!empty($email)) {
 
     <div class="time-load-section">
         <div class="container">
-            <!-- Section title and description -->
+           
             <h1 class="section-title">See some Reviews of <?php echo htmlspecialchars($partner_name); ?>!</h1>
             <p class="section-description">Read about the experience of <?php echo htmlspecialchars($partner_name); ?>'s students</p>
 
             <div class="row">
                 <?php
-                    // Fetch reviews for the partner from the database
+                   
                     $sql = "SELECT r.learnerID, r.rating, r.review, l.firstName, l.lastName
                             FROM reviews_ratings r
                             JOIN learners l ON r.learnerID = l.learnerID";
                     $result = mysqli_query($conn, $sql);
 
-                    // Display review cards in HTML format
+                    
                     if(mysqli_num_rows($result) > 0) {
                         echo "<div class='row'>";
                         while ($row = mysqli_fetch_assoc($result)) {
