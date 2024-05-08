@@ -129,7 +129,7 @@ if (!empty($email)) {
                     Check out your upcoming language learning sessions!
                 </p>
                 <button class="hero-btn">
-                  <a href="CurrentSessionsPage.php">View</a>
+                  <a href="Sessions.php">View</a>
                 </button>
             </div>
             <div class="card">
