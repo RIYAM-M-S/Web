@@ -166,7 +166,7 @@ if (!empty($email)) {
             <div class="links">
               <ul>
                 <li>
-                  <a href="NativeProfilePage.php">
+                  <a href="NativeProfilePage.html">
                     <?php 
                     if (!empty($partner_photo)) {
                         echo "<img src='http://localhost/images/" . htmlspecialchars($partner_photo) . "' alt='User' class='round-image'>";
