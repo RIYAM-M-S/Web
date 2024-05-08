@@ -12,22 +12,34 @@ if ($mysqli->connect_error) {
     die("Connection error: " . $mysqli->connect_errno);
 }
 
-$sql_sessions = "SELECT * FROM sessions WHERE learnerID = ?";
+$sql_sessions = "SELECT s.*, l.firstName AS learnerFirstName, l.lastName AS learnerLastName 
+                FROM sessions s
+                JOIN learners l ON s.learnerID = l.learnerID
+                WHERE s.learnerID = ? AND s.status = 'scheduled'";
 $stmt = $mysqli->prepare($sql_sessions);
 $stmt->bind_param("i", $_SESSION['learnerID']);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($result->num_rows > 0) {
-    $sessions = [];
+$sessions = [];
 
+if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $sessions[] = $row;
+        $session = [];
+        $session['language'] = $row['language'];
+        $session['learnerName'] = $row['learnerFirstName'] . ' ' . $row['learnerLastName'];
+        $session['proficiency'] = $row['proficiency'];
+        $session['scheduledTime'] = $row['scheduledTime'];
+        $session['duration'] = $row['duration'];
+        $session['payment'] = $row['payment'];
+
+        $sessions[] = $session;
     }
 }
 $stmt->close();
-
+$mysqli->close();
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -74,71 +86,47 @@ $stmt->close();
                         </div>
                     </div>
                 </header>
-                
-<div class="container">
-    <h1>Your current Sessions</h1>
-    <h1><br></h1>
+    <body>
 
-    <div class="requestsboard">
+    <div class="container">
+        <h1>Your current Sessions</h1>
+        <h1>  </h1>
 
-    <?php if (empty($sessions)) : ?>
-            <p>You do not have any current sessions.</p>
-        <?php else : ?>
-            <table>
-                <tr id="catigory">
-                    <th></th>
-                    <th>Language</th>
-                    <th>Partner Name</th>
-                    <th>Proificency</th>
-                    <th>Schedule</th>
-                    <th>Duration</th>
-                    <th>Payment Status</th>
-                    <th></th>
-                </tr>
 
-                <?php foreach ($sessions as $session) : ?>
-                    <?php
-                    // Extract session information
-                    $language = $session['language'];
-                    $partnerID = $session['partnerID'];
-                    $proficiency = $session['proficiency'];
-                    $schedule = $session['scheduledTime'];
-                    $duration = $session['duration'];
-                    $paymentStatus = $session['payment'];
-
-                    // Retrieve partner's name from languagePartners table based on partnerID
-                    $sql_partner = "SELECT firstName, lastName FROM languagePartners WHERE partnerID = $partnerID";
-                    $result_partner = mysqli_query($mysqli, $sql_partner);
-                    if ($row_partner = mysqli_fetch_assoc($result_partner)) {
-                        $partnerName = $row_partner['firstName'] . ' ' . $row_partner['lastName'];
-                        
-                    } else {
-                        $partnerName = 'N/A';
-                    }
-                    if ($session['status'] == 'scheduled') :
-                    ?>
-
-                    <tr>
-                        <td><img src="u.png" alt="request Icon" class="requestIcon"></td>
-                        <td><?php echo $language; ?></td>
-                        <td><?php echo $partnerName; ?></td>
-                        <td><?php echo $proficiency; ?></td>
-                        <td><?php echo $schedule; ?></td>
-                        <td><?php echo $duration; ?> min</td>
-                        <td><?php echo $paymentStatus; ?></td>
-                        <td>
-                        <?php if ($paymentStatus == 'paid') : ?>
-    <a href="StartingLivePage.php" id="save-btn">Go to Session</a>
-<?php else : ?>
-    Payment Required
-<?php endif; ?>
-                    </td>
-                </tr>
+        <div class="requestsboard">
+            <?php if (empty($sessions)) : ?>
+                <p>You do not have any current sessions</p>
+            <?php else : ?>
+                <table>
+                    <tr id="catigory">
+                        <th>Language</th>
+                        <th>Learner Name</th>
+                        <th>Proificency</th>
+                        <th>Schedule</th>
+                        <th>Duration</th>
+                        <th></th>
+                    </tr>
+                    <?php foreach ($sessions as $session) : ?>
+                        <tr>
+                            <td><?php echo $session['language']; ?></td>
+                            <td><?php echo $session['learnerName']; ?></td>
+                            <td><?php echo $session['proficiency']; ?></td>
+                            <td><?php echo $session['scheduledTime']; ?></td>
+                            <td><?php echo $session['duration']; ?> min</td>
+                            <td>
+                                <?php if ($session['payment'] == 'paid') : ?>
+                                    <a href="StartingLivePage.php" id="save-btn">Go to Session</a>
+                                <?php else : ?>
+                                    Waiting for Payment
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
             <?php endif; ?>
-        <?php endforeach; ?>
-    </table>
-<?php endif; ?>
-</div>
+        </div>
+    </div>
+
 
                 
 
