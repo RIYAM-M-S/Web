@@ -64,7 +64,7 @@ if ($result_partners->num_rows > 0) {
                 <ul>
                     <li>
                         <a href="learnerProfile.php">
-                            <img src="user.png" alt="User" class="round-image">
+                        <?php echo '<img src="' . $partner['profile_pic'] . '" alt="User" class="round-image">'; ?>
                         </a>
                     </li>
                     <li><a href="Homepage.php">Sign out</a></li>
