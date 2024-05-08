@@ -349,12 +349,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php endforeach; ?>
 </div>
 
-<div class="Save-btn">
-    <input type="submit" value="Save">
-</div>
-</form>
+<div style="display: inline-block; margin-top: 10px;">
+    <input type="submit" value="Save" style="padding: 8px 15px; background-color: #e7e7f0; color: rgb(22, 46, 86); border: none; cursor: pointer; border-radius: 3px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px;  margin-left: 180px;"
+    onmouseover="this.style.backgroundColor='#5bacdf'; this.style.color='white';"
+    onmouseout="this.style.backgroundColor='#e7e7f0'; this.style.color='rgb(22, 46, 86)';">
 </div>
 
+</form>
+</div>
+<footer>
+    <div class="footerContainer">
+        <div class="socialicon">
+            <a href="https://facebook.com"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.instagram.com/?hl=ar"><i class="fab fa-instagram"></i></a>
+            <a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.youtube.com/"><i class="fab fa-youtube"></i></a>
+        </div>
+    </div>
+    <div class="footerNav">
+        <ul>
+            <li><a href="aboutus.html">About us</a></li>
+            <li><a href="mailto:lingumates@gmail.com">Contact us</a></li>
+        </ul>
+    </div>
+</footer>
+<div class="footerBottom">
+    <p>© LinguMates, 2024; </p>
+</div>
 </div>
 </body>
 </html>
