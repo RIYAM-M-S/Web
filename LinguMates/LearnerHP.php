@@ -117,7 +117,7 @@ if (!empty($email)) {
                         Streamline your language learning journey where you can view, edit, and cancel your requests.
                     </p>
                     <button class="hero-btn">
-                        <a href="edit_request.php.php">View Requests</a>
+                        <a href="edit_request.php">View Requests</a>
                     </button>
                 </div>
 
