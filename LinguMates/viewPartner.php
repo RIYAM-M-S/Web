@@ -87,7 +87,7 @@ if ($result_partners->num_rows > 0) {
                 // Output partner's information
                 echo '<div class="box1">';
                 echo '<div class="div-6">';
-                echo '<img src="' . $partner['profile_pic'] . '" alt="User" style="width: 90px; height: 90px; position: relative; border-radius: 90px; border-color: rgb(60, 59, 59);">';
+                echo '<img src="images/' . $partner['photo'] . '" alt="User" style="width: 90px; height: 90px; position: relative; border-radius: 90px; border-color: rgb(60, 59, 59);">';
                 echo '<h2 class="h2">' . $name . '</h2>';
                 echo '<p class="p">Target language: ' . $targetLanguage . '</p>';
                 echo '<p class="p">Average Rating: ' . number_format($avgRating, 1) . ' / 5</p>'; // Display average rating
