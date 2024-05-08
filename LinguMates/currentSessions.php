@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 
 // Database connection
@@ -15,30 +17,28 @@ if ($conn->connect_error) {
 
 // Query to fetch current sessions
 $sql = "SELECT 
-            sessions.sessionID, 
-            sessions.scheduledTime, 
-            sessions.duration, 
-            sessions.payment,
-            languagePartners.firstName, 
-            languagePartners.lastName, 
-            languagePartners.photo, 
-            requests.language, 
-            requests.proficiencyLevel,
-            requests.status,
-            requests.partnerID
-            
+        sessions.sessionID, 
+        sessions.scheduledTime, 
+        sessions.duration, 
+        requests.language, 
+        requests.proficiencyLevel,
+        requests.status,
+        languagePartners.firstName, 
+        languagePartners.lastName, 
+        languagePartners.photo,
+        languagePartners.partnerID
         FROM 
-            sessions
+        sessions
         INNER JOIN 
-            languagePartners ON sessions.partnerID = languagePartners.partnerID
+        requests ON sessions.requestID = requests.requestID
         INNER JOIN 
-            requests ON sessions.learnerID = requests.learnerID AND sessions.partnerID = requests.partnerID
+        languagePartners ON requests.partnerID = languagePartners.partnerID
         WHERE 
-            sessions.learnerID = ? 
-            AND requests.preferredSchedule > NOW()
-            AND requests.time > CURTIME()
+        sessions.learnerID = ? 
+        AND requests.preferredSchedule > CURDATE()
+        AND requests.time > CURTIME()
         ORDER BY 
-            sessions.scheduledTime DESC";
+        sessions.scheduledTime DESC";
 
 // Prepare and bind
 $stmt = $conn->prepare($sql);
@@ -114,34 +114,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signout"])) {
                 <div class="links">
                     <ul>
                         <li>
-                            <a href="learnerProfile.html">
-                                <?php 
-                                if (isset($_SESSION['email'])) {
-                                    $email = $_SESSION['email'];
-                                    $photo = '';
-                                    if (!empty($email)) {
-                                        $query_photo = "SELECT photo FROM learners WHERE email = ?";
-                                        $stmt_photo = $conn->prepare($query_photo);
-                                        if ($stmt_photo) {
-                                            $stmt_photo->bind_param("s", $email);
-                                            $stmt_photo->execute();
-                                            $result_photo = $stmt_photo->get_result();
-                                            if ($result_photo && $result_photo->num_rows > 0) {
-                                                $row_photo = $result_photo->fetch_assoc();
-                                                $photo = $row_photo['photo'];
-                                            }
-                                            $stmt_photo->close();
-                                        }
-                                    }
-                                }
-                                ?>
-                                <img src="images/<?php echo htmlspecialchars($photo); ?>" alt="User" class="round-image">
-                            </a>
+                            <a href="learnerProfile.php" style="margin-right: 20px;">profile</a>
+                                
+                            
+                            
                         </li>
                         <li>
                         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" onsubmit="return confirm('Are you sure you want to sign out?');">
-                        <input type="hidden" name="signout" value="true">
-                        <a href="#" class="signout-btn" onclick="this.closest('form').submit();">Sign out</a>
+                            <input type="hidden" name="signout" value="true">
+                            <input type="hidden" name="learnerID" value="<?php echo $_SESSION["userID"]; ?>">
+                            <input type="submit" class="signout" value="Sign out">
                         </form>
                         </li>
                     </ul>
@@ -193,9 +175,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signout"])) {
                                 echo "<td>" . $row["proficiencyLevel"] . "</td>";
                                 echo "<td>" . $row["scheduledTime"] . "</td>";
                                 echo "<td>" . $row["duration"] . " min</td>";
-                                if($row["payment"] == 'paid') {
-                                    echo "<td>paid</td>";
-                                } else {
+                                if($row["status"] == 'accepted') {
                                     echo "<td><a href='payment' id='save-btn'>pay</a></td>";
                                 }
                                 echo "<td><a href='StartingLivePage.html' id='save-btn'>Go to Session</a></td>";

@@ -1,23 +1,40 @@
 <?php
+// Session start
 session_start();
 
+// Database connection
 $host = "localhost";
 $dbname = "lingumatesdb";
 $username = "root";
 $password = "";
-
 $mysqli = new mysqli($host, $username, $password, $dbname);
-
 if ($mysqli->connect_error) {
     die("Connection error: " . $mysqli->connect_errno);
 }
 
+// Sign out logic
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signout"])) {
+    // Unset all session variables
+    $_SESSION = array();
+
+    // Destroy the session
+    session_destroy();
+
+    // Redirect to homepage after sign out
+    header("Location: Homepage.php");
+    exit;
+}
+
+// Initialize variables
 $firstName = $lastName = $photo = '';
 $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
 
 if (!empty($email)) {
-    $query = "SELECT firstName, lastName, photo FROM learners WHERE email = '$email'";
-    $result = $mysqli->query($query);
+    $query = "SELECT firstName, lastName, photo FROM learners WHERE email = ?";
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
@@ -67,28 +84,34 @@ if (!empty($email)) {
             cursor: pointer;
             display: none;
         }
+       
     </style>
 </head>
 <body>
     <header>
         <div class="container">
             <div class="logo">
-                <a href="LearnerHP.php">
+                <a href="LearnerHP.html">
                     <img src="logo.png" alt="Logo">
                 </a>
             </div>
           
             <div class="links">
                 <ul>
-                    <li><a href="SignOut.php">Sign out</a></li>
+                    <li>
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" onsubmit="return confirm('Are you sure you want to sign out?');">
+                            <input type="hidden" name="signout" value="true">
+                            <input type="submit" class="signout" value="Sign out">
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>
     </header>
 
     <header class="hero-section">
-        <a href="learnerProfile.php">
-            <img src="images/<?php echo $photo; ?>" alt="User" class="round-image">
+        <a href="learnerProfile.php"> 
+            <img src="<?php echo $photo; ?>" alt="User" class="round-image">
         </a>
         
         <h2 class='hero-title'><?php echo "$firstName $lastName"; ?></h2>
@@ -117,33 +140,34 @@ if (!empty($email)) {
                         Streamline your language learning journey where you can view, edit, and cancel your requests.
                     </p>
                     <button class="hero-btn">
-                        <a href="edit_request.php">View Requests</a>
+                        <a href="LanguageRequests.html">View </a>
                     </button>
                 </div>
 
                 <div class="card">
-                    <h1 class="card-timing">
-                        Current Sessions
-                    </h1>
-                    <p class="card-description">
-                        Check out your upcoming language learning sessions and join one to enhance your language skills.
-                    </p>
-                    <button class="hero-btn">
-                        <a href="currentSessions.php">View Sessions</a>
-                    </button>
-                </div>
+                <h1 class="card-timing">
+                     current Sessions
+                </h1>
+                <p class="card-description">
+                    Check out our upcoming language learning sessions and join one to enhance your language skills.
+                </p>
+                <button class="hero-btn">
+                    <a href="currentSessions.php">View </a>
+                </button>
+            </div>
 
-                <div class="card">
-                    <h1 class="card-timing">
-                        Pervious Sessions
-                    </h1>
-                    <p class="card-description">
-                        Check out your Pervious language learning sessions and review your partners.
-                    </p>
-                    <button class="hero-btn">
-                        <a href="previousSessions.php">View Sessions</a>
-                    </button>
-                </div>
+            <div class="card">
+                <h1 class="card-timing">
+                      previous Sessions
+                </h1>
+                <p class="card-description">
+                    Check out our previous language learning sessions.
+                </p>
+                <button class="hero-btn">
+                    <a href="previousSessions.php">View </a>
+                </button>
+            </div>
+
                 
             </div>
         </div>
@@ -203,7 +227,7 @@ if (!empty($email)) {
 
     // Redirect to Partner Page
     function redirectToPartnerPage() {
-      window.location.href = "viewPartner.php";
+      window.location.href = "viewPartner.html";
     }
 
     // Back to Top Button
@@ -225,7 +249,7 @@ if (!empty($email)) {
     // Sign out function with confirmation
     function signOut() {
       if (confirm("Are you sure you want to sign out?")) {
-        window.location.href = "Homepage.php";
+        window.location.href = "Homepage.html";
       }
     }
 

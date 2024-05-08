@@ -90,10 +90,10 @@ if (!empty($email)) {
             <div class="links">
                 <ul>
                     <li>
-                        <a href="NativeProfilePage.php">
+                        <a href="NativeProfilePage.html">
                             <?php 
                             if (!empty($partner_photo)) {
-                                echo "<img src='http://localhost/images/" . htmlspecialchars($partner_photo) . "' alt='User' class='round-image'>";
+                                echo "<img src='images/" . htmlspecialchars($partner_photo) . "' alt='User' class='round-image'>";
                             }
                             ?>
                         </a>
@@ -106,10 +106,10 @@ if (!empty($email)) {
 
     <header>
         <div>
-            <a href="learnerProfile.php">
+            <a href="learnerProfile.html">
                 <?php 
                 if (!empty($partner_photo)) {
-                    echo "<img src='http://localhost/images/" . htmlspecialchars($partner_photo) . "' alt='User' class='round-image'>";
+                    echo "<img src='images/" . htmlspecialchars($partner_photo) . "' alt='User' class='round-image'>";
                 }
                 ?>
             </a>
