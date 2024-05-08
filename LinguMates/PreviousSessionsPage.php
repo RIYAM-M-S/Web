@@ -75,17 +75,21 @@ session_start();
                 $partnerID = $row['partnerID'];
 
                 $currentDateTime = date("Y-m-d H:i:s");
+
                 $querySessions = "SELECT s.*, r.language, l.firstName, l.lastName 
                                   FROM sessions s 
-                                  JOIN requests r ON s.learnerID = r.learnerID 
+                                  JOIN requests r ON s.sessionID = r.sessionID 
                                   JOIN learners l ON s.learnerID = l.learnerID 
-                                  WHERE s.partnerID = ? AND s.scheduledTime < ?";
+                                  WHERE s.partnerID = ? 
+                                  AND r.status = 'accepted' 
+                                  AND CONCAT(r.preferredSchedule, ' ', r.time) < ?";
+                                  
                 $stmtSessions = $mysqli->prepare($querySessions);
                 if ($stmtSessions) {
                     $stmtSessions->bind_param("is", $partnerID, $currentDateTime);
                     $stmtSessions->execute();
                     $resultSessions = $stmtSessions->get_result();
-
+                
                     if ($resultSessions->num_rows > 0) {
         ?>
                         <table>
