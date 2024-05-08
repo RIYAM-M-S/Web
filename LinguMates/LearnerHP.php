@@ -87,7 +87,7 @@ if (!empty($email)) {
     </header>
 
     <header class="hero-section">
-        <a href="learnerProfile.php"> 
+        <a href="learnerProfile.php">
             <img src="images/<?php echo $photo; ?>" alt="User" class="round-image">
         </a>
         
@@ -117,19 +117,31 @@ if (!empty($email)) {
                         Streamline your language learning journey where you can view, edit, and cancel your requests.
                     </p>
                     <button class="hero-btn">
-                        <a href="LanguageRequests.php">View Requests</a>
+                        <a href="edit_request.php.php">View Requests</a>
                     </button>
                 </div>
 
                 <div class="card">
                     <h1 class="card-timing">
-                        Sessions
+                        Current Sessions
                     </h1>
                     <p class="card-description">
-                        Check out our upcoming language learning sessions and join one to enhance your language skills.
+                        Check out your upcoming language learning sessions and join one to enhance your language skills.
                     </p>
                     <button class="hero-btn">
-                        <a href="Sessions.php">View Sessions</a>
+                        <a href="currentSessions.php">View Sessions</a>
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h1 class="card-timing">
+                        Pervious Sessions
+                    </h1>
+                    <p class="card-description">
+                        Check out your Pervious language learning sessions and review your partners.
+                    </p>
+                    <button class="hero-btn">
+                        <a href="previousSessions.php">View Sessions</a>
                     </button>
                 </div>
                 
